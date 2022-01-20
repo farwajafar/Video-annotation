@@ -18,7 +18,9 @@ export class VideoClass extends Component {
         loaded: 0,
         duration: 0,
         playbackRate: 1.0,
-        loop: false
+        loop: false,
+        timeStart: 0,
+        timeStop:0,
       }
       load = url => {
         this.setState({
@@ -95,11 +97,11 @@ export class VideoClass extends Component {
         this.player.seekTo(parseFloat(e.target.value))
       }
     
-      handleProgress = state => {
-        console.log('onProgress', state)
+      handleProgress = e => {
+        console.log('onProgress', e.playedSeconds)
         // We only want to update time slider if we are not currently seeking
         if (!this.state.seeking) {
-          this.setState(state)
+          this.setState(e)
         }
       }
     
@@ -128,7 +130,23 @@ export class VideoClass extends Component {
 //             }
 //         )
       }
-    
+      handleClickStart = () => {
+        // console.log("ClipStart", this.state.played);
+        // this.setState({timeStart: this.state.played})
+        console.log("ClipStart", this.state.playedSeconds);
+        this.setState({timeStart: this.state.playedSeconds})
+        
+        
+      }
+      handleClickStop = (e) => {
+        console.log("ClipStop");
+        console.log("ClipEnd", this.state.playedSeconds);
+        this.setState({timeStop: this.state.playedSeconds})
+      }
+      getDate = () => {
+        var date = new Date().toDateString();
+        this.setState({ date });
+      };
       renderLoadButton = (url, label) => {
         return (
           <button onClick={() => this.load(url)}>
@@ -142,8 +160,8 @@ export class VideoClass extends Component {
       }
       
       render () {
-        const { url, playing, controls, light, volume, muted, played, playbackRate, pip } = this.state
-        const SEPARATOR = ' · '
+        const { url, playing, controls, light, volume, muted, played, playbackRate, pip} = this.state
+        // const SEPARATOR = ' · '
     
         return (
           <div className='controls'>
@@ -187,7 +205,7 @@ export class VideoClass extends Component {
                       {/* <button onClick={this.handleStop}>Stop</button> */}
                       <button onClick={this.handlePlayPause}>{playing ? 'Pause' : 'Play'}</button>
                       {/* <button onClick={this.handleClickFullscreen}>Fullscreen</button> */}
-                      <button onClick={this.handleClickSubmit}>Submit</button>
+                     
                       {light &&
                         <button onClick={() => this.player.showPreview()}>Show preview</button>}
                       {ReactPlayer.canEnablePIP(url) &&
@@ -217,6 +235,11 @@ export class VideoClass extends Component {
                 </tbody>
               </table>
               <div>
+          <div>
+          <button onClick={this.handleClickStart}>Clip Start</button>
+          <button onClick={this.handleClickStop}>Clip Stop</button>
+          <button onClick={this.handleClickSubmit}>Submit</button>
+          </div>
          <input type="radio" value="News" name="button" /> News
          <input type="radio" value="Program" name="button" /> Program 
          </div>
