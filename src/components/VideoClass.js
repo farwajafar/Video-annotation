@@ -19,8 +19,10 @@ export class VideoClass extends Component {
         duration: 0,
         playbackRate: 1.0,
         loop: false,
-        timeStart: 0,
-        timeStop:0,
+        timeStart: null,
+        timeStop:null,
+        isDisabled: true,
+        stream: 'news',
       }
       load = url => {
         this.setState({
@@ -121,6 +123,9 @@ export class VideoClass extends Component {
       handleClickSubmit = (e) => {
         //   e.preventDefault();
         console.log("submited");
+        // this.setState({
+        //   isDisabled: true
+        // });
 //         fetch("http://localhost:8000/blogs",{
 //             method: "POST",
 //             headers: {'Content-Type' : 'Application/json'},
@@ -131,18 +136,31 @@ export class VideoClass extends Component {
 //         )
       }
       handleClickStart = () => {
-        // console.log("ClipStart", this.state.played);
-        // this.setState({timeStart: this.state.played})
         console.log("ClipStart", this.state.playedSeconds);
-        this.setState({timeStart: this.state.playedSeconds})
-        
-        
+        this.setState({
+          timeStart: this.state.playedSeconds
+        })  
       }
       handleClickStop = (e) => {
-        console.log("ClipStop");
-        console.log("ClipEnd", this.state.playedSeconds);
-        this.setState({timeStop: this.state.playedSeconds})
+        console.log("ClipStop", this.state.playedSeconds);
+        this.setState({
+          timeStop: this.state.playedSeconds,
+          isDisabled: false
+        })
+      //        if(this.timeStart > this.timeStop ){
+      //     alert('Given date is greater than the current date.');
+      // }else{
+      //     alert('Given date is not greater than the current date.');
+      // }
       }
+      handleRadioChange = (e)=> {
+        // set the new value of checked radion button to state using setState function which is async funtion
+      this.setState({
+        stream: e.target.value
+      });
+    }
+
+
       getDate = () => {
         var date = new Date().toDateString();
         this.setState({ date });
@@ -237,11 +255,14 @@ export class VideoClass extends Component {
               <div>
           <div>
           <button onClick={this.handleClickStart}>Clip Start</button>
-          <button onClick={this.handleClickStop}>Clip Stop</button>
-          <button onClick={this.handleClickSubmit}>Submit</button>
+          <button onClick={this.handleClickStop} >Clip Stop</button>
+          <button onClick={this.handleClickSubmit}  disabled={this.state.isDisabled} >Submit</button>
           </div>
-         <input type="radio" value="News" name="button" /> News
-         <input type="radio" value="Program" name="button" /> Program 
+          <div check>
+         <input type="radio" value="news" name="Newsbutton"  checked={this.state.stream === "news"}  onChange={this.handleRadioChange} /> News
+         <input type="radio" value="program" name="Programbutton" checked={this.state.stream === "program"}  onChange={this.handleRadioChange}/> Program 
+         </div>
+
          </div>
             </section>
           
