@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 // import ReactPlayer from '../index'
@@ -120,21 +121,17 @@ export class VideoClass extends Component {
       // handleClickFullscreen = () => {
       //   screenfull.request(findDOMNode(this.player))
       // }
-      handleClickSubmit = (e) => {
-        //   e.preventDefault();
-        console.log("submited");
-        // this.setState({
-        //   isDisabled: true
-        // });
-//         fetch("http://localhost:8000/blogs",{
-//             method: "POST",
-//             headers: {'Content-Type' : 'Application/json'},
-//             body: JSON.stringify(blog)
-//         }).then ((  ) =>{
-// console.log("newblog aadded");
-//             }
-//         )
-      }
+     submitHandler= (e) => {
+       e.preventDefault()
+       console.log("hii",this.state);
+       axios.post('https://jsonplaceholder.typicode.com/posts', this.state)
+			.then(response => {
+				console.log('response',response)
+			})
+			.catch(error => {
+				console.log(error)
+			})
+     }
       handleClickStart = () => {
         console.log("ClipStart", this.state.playedSeconds);
         this.setState({
@@ -153,6 +150,7 @@ export class VideoClass extends Component {
       //     alert('Given date is not greater than the current date.');
       // }
       }
+    
       handleRadioChange = (e)=> {
         // set the new value of checked radion button to state using setState function which is async funtion
       this.setState({
@@ -180,6 +178,7 @@ export class VideoClass extends Component {
       render () {
         const { url, playing, controls, light, volume, muted, played, playbackRate, pip} = this.state
         // const SEPARATOR = ' · '
+       
     
         return (
           <div className='controls'>
@@ -253,11 +252,14 @@ export class VideoClass extends Component {
                 </tbody>
               </table>
               <div>
-          <div>
+              <form onSubmit={this.submitHandler}>
+            <div>
           <button onClick={this.handleClickStart}>Clip Start</button>
           <button onClick={this.handleClickStop} >Clip Stop</button>
-          <button onClick={this.handleClickSubmit}  disabled={this.state.isDisabled} >Submit</button>
           </div>
+          <button type='submit'  disabled={this.state.isDisabled} >Submit</button>
+          </form>
+
           <div check>
          <input type="radio" value="news" name="Newsbutton"  checked={this.state.stream === "news"}  onChange={this.handleRadioChange} /> News
          <input type="radio" value="program" name="Programbutton" checked={this.state.stream === "program"}  onChange={this.handleRadioChange}/> Program 
